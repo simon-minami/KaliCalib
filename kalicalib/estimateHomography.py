@@ -18,15 +18,14 @@ from scipy.spatial.distance import cdist
 
 
 # add parent directory to path
-sys.path.append(os.path.join(os.getcwd(), 'KaliCalib'))
-sys.path.append(os.path.join(os.getcwd(), 'KaliCalib/data'))
-sys.path.append(os.path.join(os.getcwd(), '.'))
+current_directory = os.getcwd()
+sys.path.append(os.path.join(current_directory, 'KaliCalib'))
 
 for path in sys.path:
     print(path)
-from kalicalib.model_resnet import makeModel
-from data.datasets.viewds import getFieldPoints
-from modeling.example_camera_model import compute_camera_model, MEAN_H
+from KaliCalib.kalicalib.model_resnet import makeModel
+from KaliCalib.data.datasets.viewds import getFieldPoints
+from KaliCalib.modeling.example_camera_model import compute_camera_model, MEAN_H
 
 seed = 4212
 
