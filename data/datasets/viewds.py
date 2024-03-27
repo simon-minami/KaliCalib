@@ -28,7 +28,7 @@ from deepsport_utilities.ds.instants_dataset.views_transforms import (
 from deepsport_utilities.transforms import IncompatibleCropException
 from deepsport_utilities.utils import Subset, SubsetType
 
-from data import transforms
+# from data import transforms
 
 
 class GenerateViewDS:
