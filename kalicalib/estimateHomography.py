@@ -278,7 +278,8 @@ def estimateCalibHM(heatmaps, npImg, fieldPoints2d, fieldPoints3d, oriHeight, or
         cv2.imshow("test2", npImg)
         cv2.waitKey()
 
-    return calib
+    # return calib
+    return npImg, Hest
 
 
 def calcAngle(v1, v2):
@@ -340,6 +341,19 @@ def find_coord(heatmap):
 
     return cx, cy
 
+def drawHomograpyMatrix(model, device, image):
+    '''
+    calculates homography matrix and draws estimated court lines on the given frame
+    returns: updated frame and the cacluated homography matrix
+    '''
+    im = np.ascontiguousarray(np.copy(image))
+    fieldPoints2d = getFieldPoints2d()
+    fieldPoints3d = getFieldPoints()
+
+    im = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
+
+    im, homo_matrix = estimateCalib(model, device, fieldPoints2d, fieldPoints3d, im, False)
+    return im, homo_matrix
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Estimate the homography of a sport field")
