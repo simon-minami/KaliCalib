@@ -29,10 +29,10 @@ from KaliCalib.modeling.example_camera_model import compute_camera_model, MEAN_H
 
 seed = 4212
 
-# IMG_WIDTH = 960
-# IMG_HEIGHT = 540
-IMG_WIDTH = 1920
-IMG_HEIGHT = 1080
+IMG_WIDTH = 960
+IMG_HEIGHT = 540
+# IMG_WIDTH = 1920
+# IMG_HEIGHT = 1080
 
 FIELD_LENGTH = 2800
 FIELD_WIDTH = 1500
