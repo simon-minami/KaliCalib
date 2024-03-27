@@ -361,6 +361,34 @@ def drawHomograpyMatrix(model, device, image):
     im, homo_matrix = estimateCalib(model, device, fieldPoints2d, fieldPoints3d, im, False)
     return im, homo_matrix
 
+def getTrackingData(homo_matrix, tlwhs, obj_ids=None, frame_id=0):
+    '''
+    applys homographic transformation and returns formated tracking data for given frame
+    Args:
+        homo_matrix:
+        tlwhs:
+        obj_ids:
+        frame_id:
+
+    Returns: array of new tracking data
+
+    '''
+    # take tlwhs which is list of BBs in form [x1, y1, w, h] and turn it to player coordinate
+    video_coords = np.array(list(map(lambda bb: (bb[0] + bb[2] / 2, bb[1] + bb[3]), tlwhs)))
+
+    num_tracks = len(tlwhs)
+    pts = video_coords.reshape(-1, 1, 2)  # need to reshape for transformation
+    transformed_coords = cv2.perspectiveTransform(pts, homo_matrix).reshape(num_tracks, 2)
+
+    # Create two new columns
+    frame_ids = np.full((num_tracks, 1), frame_id)  # Example: Column of ones
+    player_ids = np.array(obj_ids).reshape(num_tracks, 1)  # Example: Column of zeros
+
+    # Concatenate the new columns with the original array
+    tracking_data = np.hstack((frame_ids, player_ids, transformed_coords))
+    # print(f'tracking_data: {tracking_data.shape}')
+    return tracking_data
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Estimate the homography of a sport field")
     parser.add_argument("modelPath", help="Model path")
