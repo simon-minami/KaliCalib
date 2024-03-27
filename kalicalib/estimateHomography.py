@@ -16,7 +16,9 @@ from deepsport_utilities.calib import Calib
 from calib3d.points import Point2D, Point3D
 from scipy.spatial.distance import cdist
 
-sys.path.append(".")
+sys.path.append("..")
+for path in sys.path:
+    print(path)
 from kalicalib.model_resnet import makeModel
 from data.datasets.viewds import getFieldPoints
 from modeling.example_camera_model import compute_camera_model, MEAN_H
