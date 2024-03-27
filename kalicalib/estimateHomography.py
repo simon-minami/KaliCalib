@@ -180,7 +180,7 @@ def getModel(modelPath):
 
 def estimateCalib(model, device, fieldPoints2d, fieldPoints3d, oriImg, visualization):
     oriHeight, oriWidth = oriImg.shape[0:2]
-    npImg = cv2.resize(oriImg, (IMG_WIDTH, IMG_HEIGHT))
+    # npImg = cv2.resize(oriImg, (IMG_WIDTH, IMG_HEIGHT))
 
     tf = transforms.Compose([
             transforms.ToTensor(),
@@ -189,12 +189,12 @@ def estimateCalib(model, device, fieldPoints2d, fieldPoints3d, oriImg, visualiza
             #transforms.Normalize(mean=[0.3235, 0.5064, 0.4040],
             #                     std=[0.1718, 0.1565, 0.1687])
         ])
-    img = tf(npImg).to(device).unsqueeze(0)
+    img = tf(oriImg).to(device).unsqueeze(0)
 
     with torch.no_grad():
         heatmaps = model(img)
 
-    return estimateCalibHM(heatmaps, npImg, fieldPoints2d, fieldPoints3d, oriHeight, oriWidth, visualization)
+    return estimateCalibHM(heatmaps, oriImg, fieldPoints2d, fieldPoints3d, oriHeight, oriWidth, visualization)
 
 
 def estimateCalibHM(heatmaps, npImg, fieldPoints2d, fieldPoints3d, oriHeight, oriWidth, visualization):
