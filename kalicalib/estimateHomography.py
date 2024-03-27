@@ -378,6 +378,7 @@ def getTrackingData(homo_matrix, tlwhs, obj_ids=None, frame_id=0):
 
     num_tracks = len(tlwhs)
     pts = video_coords.reshape(-1, 1, 2)  # need to reshape for transformation
+    print(f'dubug: number of tracks: {num_tracks}, homo_matrix: {homo_matrix}')
     transformed_coords = cv2.perspectiveTransform(pts, homo_matrix).reshape(num_tracks, 2)
 
     # Create two new columns
