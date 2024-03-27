@@ -18,7 +18,7 @@ from scipy.spatial.distance import cdist
 
 
 # add parent directory to path
-sys.path.append(os.path.dirname(os.getcwd()))
+sys.path.append(os.path.join(os.getcwd(), 'KaliCalib'))
 for path in sys.path:
     print(path)
 from kalicalib.model_resnet import makeModel
