@@ -16,7 +16,9 @@ from deepsport_utilities.calib import Calib
 from calib3d.points import Point2D, Point3D
 from scipy.spatial.distance import cdist
 
-sys.path.append("..")
+
+# add parent directory to path
+sys.path.append(os.path.dirname(os.getcwd()))
 for path in sys.path:
     print(path)
 from kalicalib.model_resnet import makeModel
