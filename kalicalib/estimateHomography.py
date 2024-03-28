@@ -257,7 +257,8 @@ def estimateCalibHM(heatmaps, npImg, fieldPoints2d, fieldPoints3d, oriHeight, or
             ransacReprojThreshold = 35,
             maxIters = 2000
         )
-
+        print(f'debug: {len(srcPoints)} src points: {srcPoints}')
+        print(f'debug: {len(dstPoints)} dst points: {dstPoints}')
         if Hest is not None:
             srcPoints3d = []
             dstPoints2d = []
@@ -383,7 +384,7 @@ def getTrackingData(homo_matrix, tlwhs, obj_ids=None, frame_id=0):
 
     num_tracks = len(tlwhs)
     pts = scaled_coords.reshape(-1, 1, 2)  # need to reshape for transformation
-    print(f'dubug: number of tracks: {num_tracks}, homo_matrix: {homo_matrix}')
+    # print(f'dubug: number of tracks: {num_tracks}, homo_matrix: {homo_matrix}')
     transformed_coords = cv2.perspectiveTransform(pts, homo_matrix).reshape(num_tracks, 2)
 
     # Create two new columns
