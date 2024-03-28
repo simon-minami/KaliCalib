@@ -377,9 +377,12 @@ def getTrackingData(homo_matrix, tlwhs, obj_ids=None, frame_id=0):
     '''
     # take tlwhs which is list of BBs in form [x1, y1, w, h] and turn it to player coordinate
     video_coords = np.array(list(map(lambda bb: (bb[0] + bb[2] / 2, bb[1] + bb[3]), tlwhs)))
+    # Divide each element by 2 to scale down from 1920x1080 to 960x540 space
+    # Homography matrix calculated by KaliCalib is based on 960x540 space
+    scaled_coords = video_coords / 2
 
     num_tracks = len(tlwhs)
-    pts = video_coords.reshape(-1, 1, 2)  # need to reshape for transformation
+    pts = scaled_coords.reshape(-1, 1, 2)  # need to reshape for transformation
     print(f'dubug: number of tracks: {num_tracks}, homo_matrix: {homo_matrix}')
     transformed_coords = cv2.perspectiveTransform(pts, homo_matrix).reshape(num_tracks, 2)
 
