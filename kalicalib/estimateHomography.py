@@ -379,26 +379,35 @@ def getTrackingData(homo_matrix, tlwhs, ball_bbox, obj_ids=None, frame_id=0):
     '''
     # take tlwhs which is list of BBs in form [x1, y1, w, h] and turn it to player coordinate
     # should have shape (num tracks, 2)
+    num_tracks = len(tlwhs)
+
+    # create player id column
+    player_ids = np.array(obj_ids).reshape(num_tracks, 1)  # Example: Column of zeros
+
     video_coords = np.array(list(map(lambda bb: (bb[0] + bb[2] / 2, bb[1] + bb[3]), tlwhs)))
     # do same thing for ball coordinate, which is in different format
-    ball_coords = np.array([(ball_bbox[0] + (ball_bbox[2] - ball_bbox[0]) / 2, ball_bbox[3])])
-    all_video_coords = np.vstack((video_coords, ball_coords))
-    print(f'debug: player: {video_coords}, ball: {ball_coords}, combined: {all_video_coords}')
+    if ball_bbox[4] > 0.5:
+        ball_coords = np.array([(ball_bbox[0] + (ball_bbox[2] - ball_bbox[0]) / 2, ball_bbox[3])])
+        video_coords = np.vstack((video_coords, ball_coords))
+        num_tracks += 1
+        player_ids = np.vstack([player_ids, [-1]])  # update player id with -1 for the ball
 
-    #TODO FINSIH REST
+    # create frame id column
+    frame_ids = np.full((num_tracks, 1), frame_id)  # Example: Column of ones
+
+    # print(f'debug: player: {video_coords}, ball: {ball_coords}, combined: {all_video_coords}')
+
 
     # Divide each element by 2 to scale down from 1920x1080 to 960x540 space
     # Homography matrix calculated by KaliCalib is based on 960x540 space
-    scaled_coords = all_video_coords / 2
+    scaled_coords = video_coords / 2
 
-    num_tracks = len(tlwhs)
+
     pts = scaled_coords.reshape(-1, 1, 2)  # need to reshape for transformation
     # print(f'dubug: number of tracks: {num_tracks}, homo_matrix: {homo_matrix}')
     transformed_coords = cv2.perspectiveTransform(pts, homo_matrix).reshape(num_tracks, 2)
 
-    # Create two new columns
-    frame_ids = np.full((num_tracks, 1), frame_id)  # Example: Column of ones
-    player_ids = np.array(obj_ids).reshape(num_tracks, 1)  # Example: Column of zeros
+
 
     # Concatenate the new columns with the original array
     tracking_data = np.hstack((frame_ids, player_ids, transformed_coords))
