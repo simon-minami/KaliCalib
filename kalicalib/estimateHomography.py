@@ -386,7 +386,7 @@ def getTrackingData(homo_matrix, tlwhs, ball_bbox, obj_ids=None, frame_id=0):
 
     video_coords = np.array(list(map(lambda bb: (bb[0] + bb[2] / 2, bb[1] + bb[3]), tlwhs)))
     # do same thing for ball coordinate, which is in different format
-    if ball_bbox[4] > 0.5:
+    if (ball_bbox is not None) and (ball_bbox[4] > 0.5): # if conf over threshold
         ball_coords = np.array([(ball_bbox[0] + (ball_bbox[2] - ball_bbox[0]) / 2, ball_bbox[3])])
         video_coords = np.vstack((video_coords, ball_coords))
         num_tracks += 1
