@@ -364,23 +364,32 @@ def drawHomograpyMatrix(model, device, image):
     im, homo_matrix = estimateCalib(model, device, fieldPoints2d, fieldPoints3d, im, False)
     return im, homo_matrix
 
-def getTrackingData(homo_matrix, tlwhs, obj_ids=None, frame_id=0):
+def getTrackingData(homo_matrix, tlwhs, ball_bbox, obj_ids=None, frame_id=0):
     '''
     applys homographic transformation and returns formated tracking data for given frame
     Args:
         homo_matrix:
-        tlwhs:
-        obj_ids:
+        tlwhs: player bounding boxes in form list of [x1, y1, w, h]
+        ball_bbox: ball bounding boxes in form [xmin, ymin, xmax, ymax, conf, class id]
+        obj_ids: player ids
         frame_id:
 
     Returns: array of new tracking data
 
     '''
     # take tlwhs which is list of BBs in form [x1, y1, w, h] and turn it to player coordinate
+    # should have shape (num tracks, 2)
     video_coords = np.array(list(map(lambda bb: (bb[0] + bb[2] / 2, bb[1] + bb[3]), tlwhs)))
+    # do same thing for ball coordinate, which is in different format
+    ball_coords = np.array(lambda bb: (bb[0] + (bb[2] - bb[0]) / 2, bb[3]), ball_bbox)
+    all_video_coords = np.vstack((video_coords, ball_coords))
+    print(f'debug: player: {video_coords}, ball: {ball_coords}, combined: {all_video_coords}')
+
+    #TODO FINSIH REST
+
     # Divide each element by 2 to scale down from 1920x1080 to 960x540 space
     # Homography matrix calculated by KaliCalib is based on 960x540 space
-    scaled_coords = video_coords / 2
+    scaled_coords = all_video_coords / 2
 
     num_tracks = len(tlwhs)
     pts = scaled_coords.reshape(-1, 1, 2)  # need to reshape for transformation
