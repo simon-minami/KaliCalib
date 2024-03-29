@@ -257,8 +257,8 @@ def estimateCalibHM(heatmaps, npImg, fieldPoints2d, fieldPoints3d, oriHeight, or
             ransacReprojThreshold = 35,
             maxIters = 2000
         )
-        print(f'debug: {len(srcPoints)} src points: {srcPoints}')
-        print(f'debug: {len(dstPoints)} dst points: {dstPoints}')
+        # print(f'debug: {len(srcPoints)} src points: {srcPoints}')
+        # print(f'debug: {len(dstPoints)} dst points: {dstPoints}')
         if Hest is not None:
             srcPoints3d = []
             dstPoints2d = []
@@ -381,7 +381,7 @@ def getTrackingData(homo_matrix, tlwhs, ball_bbox, obj_ids=None, frame_id=0):
     # should have shape (num tracks, 2)
     video_coords = np.array(list(map(lambda bb: (bb[0] + bb[2] / 2, bb[1] + bb[3]), tlwhs)))
     # do same thing for ball coordinate, which is in different format
-    ball_coords = np.array(lambda bb: (bb[0] + (bb[2] - bb[0]) / 2, bb[3]), ball_bbox)
+    ball_coords = np.array([(ball_bbox[0] + (ball_bbox[2] - ball_bbox[0]) / 2, ball_bbox[3])])
     all_video_coords = np.vstack((video_coords, ball_coords))
     print(f'debug: player: {video_coords}, ball: {ball_coords}, combined: {all_video_coords}')
 
