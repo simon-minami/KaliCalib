@@ -257,8 +257,8 @@ def estimateCalibHM(heatmaps, npImg, fieldPoints2d, fieldPoints3d, oriHeight, or
             ransacReprojThreshold = 35,
             maxIters = 2000
         )
-        # print(f'debug: {len(srcPoints)} src points: {srcPoints}')
-        # print(f'debug: {len(dstPoints)} dst points: {dstPoints}')
+        print(f'debug: {len(srcPoints)} src points: {srcPoints}')
+        print(f'debug: {len(dstPoints)} dst points: {dstPoints}')
         if Hest is not None:
             srcPoints3d = []
             dstPoints2d = []
