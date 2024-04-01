@@ -259,6 +259,17 @@ def estimateCalibHM(heatmaps, npImg, fieldPoints2d, fieldPoints3d, oriHeight, or
         )
         print(f'debug: {len(srcPoints)} src points: {srcPoints}')
         print(f'debug: {len(dstPoints)} dst points: {dstPoints}')
+
+        # given code seems to initialize calib object to go from court to video, not video to court
+        # which is why I had to add this.
+        video_to_court, _ = cv2.findHomography(
+            np.array(dstPoints),
+            np.array(srcPoints),
+            cv2.RANSAC,
+            # 0,
+            ransacReprojThreshold=35,
+            maxIters=2000
+        )
         if Hest is not None:
             srcPoints3d = []
             dstPoints2d = []
@@ -288,7 +299,7 @@ def estimateCalibHM(heatmaps, npImg, fieldPoints2d, fieldPoints3d, oriHeight, or
         cv2.waitKey()
 
     # return calib
-    return npImg, Hest
+    return npImg, video_to_court
 
 
 def calcAngle(v1, v2):
@@ -361,6 +372,7 @@ def drawHomograpyMatrix(model, device, image):
 
     im = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
 
+    # calib is instance of Calib object defined in deepsports-radar package
     im, homo_matrix = estimateCalib(model, device, fieldPoints2d, fieldPoints3d, im, False)
     return im, homo_matrix
 
@@ -368,7 +380,7 @@ def getTrackingData(homo_matrix, tlwhs, ball_bbox, obj_ids=None, frame_id=0):
     '''
     applys homographic transformation and returns formated tracking data for given frame
     Args:
-        homo_matrix:
+        calib: Calib object returned by estimate calib
         tlwhs: player bounding boxes in form list of [x1, y1, w, h]
         ball_bbox: ball bounding boxes in form [xmin, ymin, xmax, ymax, conf, class id]
         obj_ids: player ids
@@ -386,7 +398,7 @@ def getTrackingData(homo_matrix, tlwhs, ball_bbox, obj_ids=None, frame_id=0):
 
     video_coords = np.array(list(map(lambda bb: (bb[0] + bb[2] / 2, bb[1] + bb[3]), tlwhs)))
     # do same thing for ball coordinate, which is in different format
-    if (ball_bbox is not None) and (ball_bbox[4] > 0.5): # if conf over threshold
+    if ball_bbox is not None: # will be none if number of detections is 0 or best detection didn't meet threshold
         ball_coords = np.array([(ball_bbox[0] + (ball_bbox[2] - ball_bbox[0]) / 2, ball_bbox[3])])
         video_coords = np.vstack((video_coords, ball_coords))
         num_tracks += 1
@@ -406,6 +418,16 @@ def getTrackingData(homo_matrix, tlwhs, ball_bbox, obj_ids=None, frame_id=0):
     pts = scaled_coords.reshape(-1, 1, 2)  # need to reshape for transformation
     # print(f'dubug: number of tracks: {num_tracks}, homo_matrix: {homo_matrix}')
     transformed_coords = cv2.perspectiveTransform(pts, homo_matrix).reshape(num_tracks, 2)
+
+    # TODO: have to figure out to do homo transforamtion in same way seen in drawCalibCourt \
+    #  seems like i have to add a third demension?, also what is 3d to 2d vs 2d to 3d \
+    #  in drawcalibcourt: 3d_to_2d(court_diagram_pts) -> video coords \
+    #  does this mean i have to use 2d to 3d to get court diagram pts? \
+    #  need clarification on what authors mean by 2d vs 3d (cuz i would think the court diagram space \
+    #  would be 2d, but evidently not) \
+    # points = Point3D(points.T)
+    # proj = calib.project_3D_to_2D(points).T.astype(int)
+
 
 
 
