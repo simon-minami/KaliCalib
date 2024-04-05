@@ -16,6 +16,6 @@ DATASETS:
   TEST: "sviewds"
 
 DATALOADER:
-  NUM_WORKERS: 8
+  NUM_WORKERS: 2 # tufts hpc max is 2
 
 OUTPUT_DIR: "logs/sviewds_public_baseline"
