@@ -42,7 +42,7 @@ def train(cfg):
 
     optimizer = torch.optim.AdamW(model.parameters(), lr=0.0001)
     lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 2 * nEpoch // 3)
-
+    print(f'debug 1')
     dataLoader = make_data_loader(cfg, is_train=True)
 
     for e in range(nEpoch):
@@ -55,9 +55,9 @@ def train(cfg):
 
             imgs = imgs.to(device)
             heatmaps = data["heatmaps"].to(device)
-            print(f'debug 1')
-            out = model(imgs)
             print(f'debug 2')
+            out = model(imgs)
+            print(f'debug 3')
             loss = lossFunc(out, heatmaps)
             loss_val = loss.item()
             pbar.set_description("loss: %f" % loss_val)
