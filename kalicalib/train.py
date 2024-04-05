@@ -44,6 +44,7 @@ def train(cfg):
     lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 2 * nEpoch // 3)
     print(f'debug 1')
     dataLoader = make_data_loader(cfg, is_train=True)
+    print(type(dataLoader))
 
     for e in range(nEpoch):
         print("Epoch: %d" % (e + 1))
@@ -54,6 +55,10 @@ def train(cfg):
         totalLoss = 0
         print(type(pbar))
         print(pbar)
+        print(f'debug: attempting to iterate through dataloader')
+        train_features, train_labels = next(iter(dataLoader))
+        print(f"Feature batch shape: {train_features.size()}")
+        print(f"Labels batch shape: {train_labels.size()}")
         for imgs, data in pbar: #TODO: errror occuring here
             print('debug 3')
             imgs = imgs.to(device)
