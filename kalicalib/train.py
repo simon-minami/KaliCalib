@@ -52,7 +52,9 @@ def train(cfg):
         print('debug 2')
         nbIt = 0
         totalLoss = 0
-        for imgs, data in pbar:
+        print(type(pbar))
+        print(pbar)
+        for imgs, data in pbar: #TODO: errror occuring here
             print('debug 3')
             imgs = imgs.to(device)
             print('debug 4')
