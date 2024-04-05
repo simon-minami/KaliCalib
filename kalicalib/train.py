@@ -55,9 +55,9 @@ def train(cfg):
 
             imgs = imgs.to(device)
             heatmaps = data["heatmaps"].to(device)
-            print(f'debug 2')
+
             out = model(imgs)
-            print(f'debug 3')
+
             loss = lossFunc(out, heatmaps)
             loss_val = loss.item()
             pbar.set_description("loss: %f" % loss_val)
