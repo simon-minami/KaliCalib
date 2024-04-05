@@ -412,7 +412,7 @@ def getTrackingData(homo_matrix, tlwhs, ball_bbox, obj_ids=None, frame_id=0):
 
     # Divide each element by 2 to scale down from 1920x1080 to 960x540 space
     # Homography matrix calculated by KaliCalib is based on 960x540 space
-    scaled_coords = video_coords / 2
+    scaled_coords = video_coords / (1+1/3)
 
 
     pts = scaled_coords.reshape(-1, 1, 2)  # need to reshape for transformation
