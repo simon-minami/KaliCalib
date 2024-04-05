@@ -49,14 +49,17 @@ def train(cfg):
         print("Epoch: %d" % (e + 1))
 
         pbar = tqdm(dataLoader)
+        print('debug 2')
         nbIt = 0
         totalLoss = 0
         for imgs, data in pbar:
-
+            print('debug 3')
             imgs = imgs.to(device)
+            print('debug 4')
             heatmaps = data["heatmaps"].to(device)
-
+            print('debug 5')
             out = model(imgs)
+            print('debug 6')
 
             loss = lossFunc(out, heatmaps)
             loss_val = loss.item()

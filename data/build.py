@@ -105,13 +105,13 @@ def make_data_loader(cfg: CfgNode, is_train: bool = True) -> data.DataLoader:
     else:
         batch_size = cfg.TEST.IMS_PER_BATCH
         shuffle = False
-    print('debug a')
+    # print('debug a')
     transforms = build_transforms(cfg, is_train)
-    print('debug b')
+    # print('debug b')
     datasets = build_dataset(cfg, transforms=transforms, is_train=is_train)
-    print('debug c')
+    # print('debug c')
     num_workers = cfg.DATALOADER.NUM_WORKERS
-    print('debug d')
+    # print('debug d')
     data_loader = data.DataLoader(
         datasets,
         batch_size=batch_size,
