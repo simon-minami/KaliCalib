@@ -51,7 +51,7 @@ def build_dataset(
         return CHALLENGE("CHALLENGE", transform=transforms)
     if cfg.DATASETS.TRAIN == "sviewds":
         width, height = (
-            cfg.INPUT.MULTIPLICATIVE_FACTOR * cfg.INPUT.GENERATED_VIEW_SIZE[0],
+            cfg.INPUT.MULTsIPLICATIVE_FACTOR * cfg.INPUT.GENERATED_VIEW_SIZE[0],
             cfg.INPUT.MULTIPLICATIVE_FACTOR * cfg.INPUT.GENERATED_VIEW_SIZE[1],
         )
         def_min, def_max = (

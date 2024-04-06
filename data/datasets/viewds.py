@@ -439,6 +439,7 @@ class ApplyRandomTransform(CleverViewRandomCropperTransform):
         self.trials = trials
 
     def _apply_transform_once(self, key, item):
+        print(f'debug: key: {key}, item: {item}')
         if item is None:
             return None
         parameters = self._get_current_parameters(key, item)
